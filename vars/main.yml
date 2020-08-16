@@ -1,0 +1,27 @@
+---
+#Recommended for specific apps (optional):
+#  - exif (for image rotation in pictures app)
+#  - gmp (for SFTP storage)
+
+apache2_modules:
+  - ssl
+  - rewrite
+  - headers
+  - env
+  - dir
+  - mime
+
+nextcloud_base_url: "https://download.nextcloud.com/server/releases"
+nextcloud_download_url: "{{nextcloud_base_url}}/nextcloud-{{nextcloud_version}}.tar.bz2"
+nextcloud_gpg_url: "{{nextcloud_download_url}}.asc"
+nextcloud_md5_url: "{{nextcloud_download_url}}.md5"
+nextcloud_sha256_url: "{{nextcloud_download_url}}.sha256"
+nextcloud_sha512_url: "{{nextcloud_download_url}}.sha512"
+
+nextcloud_hashes:
+  - url: "{{nextcloud_md5_url}}"
+    hash: md5
+  - url: "{{nextcloud_sha256_url}}"
+    hash: sha256
+  - url: "{{nextcloud_sha512_url}}"
+    hash: sha512

@@ -4,7 +4,7 @@ This role installs Nextcloud on RHEL/CentOS, Debian/Ubuntu and Fedora servers.
 
 ## Known issues
 
-None.
+- Installation on Debian works generally but automatic setup of Nextcloud is currently not possible. You need to do this manually as of now.
 
 ## Requirements
 
@@ -17,7 +17,52 @@ No special requirements; note that this role requires root access, so either run
 
 ## Role Variables
 
-ToDo
+Available variables are listed below, along with default values (see `defaults/main.yml`):
+
+    nextcloud_version: "18.0.7"
+
+Define the Nextcloud version you want to install.
+
+    nextcloud_create_self_signed_cert: true
+    nextcloud_self_signed_cert_subj: "/C=DE/ST=FOO/L=BAR/O=Org/CN={{ nextcloud_external_url }}"
+    nextcloud_self_signed_certificate_key: "/etc/{{ apache2_http_name }}/ssl/nextcloud.key"
+    nextcloud_self_signed_certificate: "/etc/{{ apache2_http_name }}/ssl/nextcloud.crt"
+
+Configure self signed certificates to your liking.
+
+    nextcloud_custom_cert: false
+    nextcloud_custom_cert_file: /etc/{{ apache2_http_name }}/ssl/nextcloud.crt
+    nextcloud_custom_cert_key: /etc/{{ apache2_http_name }}/ssl/nextcloud.key
+
+If you want to use your own certificate you can define that here.
+
+    nextcloud_certificate_key: "{{ certbot_cert_path }}/privkey.pem"
+    nextcloud_certificate: "{{ certbot_cert_path }}/cert.pem"
+    nextcloud_certificate_chain: "{{ certbot_cert_path }}/fullchain.pem"
+
+If `nextcloud_create_self_signed_cert` and `nextcloud_custom_cert` are set to false, my `ansible-role-certbot` will be used to acquire certificates.
+
+nextcloud_db_system: "mysql"
+nextcloud_db_name: "nextcloud"
+
+nextcloud_enable_opt_prerequisites: true
+
+nextcloud_backup: false
+nextcloud_web_dir: "/var/www/nextcloud"
+nextcloud_data_dir: "/var/www/nextcloud/data"
+nextcloud_backup_path: "/tmp"
+
+nextcloud_php_options:
+  - line: "post_max_size = 4G"
+    regexp: "^post_max_size ="
+  - line: "upload_max_filesize = 4G"
+    regexp: "^upload_max_filesize ="
+  - line: "open_basedir ='{{ nextcloud_web_dir }}:{{ nextcloud_data_dir }}:/tmp:/dev/urandom'"
+    regexp: "^open_basedir ="
+
+nextcloud_enabled_apps:
+  - files
+
 
 ## Dependencies
 

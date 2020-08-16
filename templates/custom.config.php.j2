@@ -1,0 +1,41 @@
+<?php
+$CONFIG = array(
+'trusted_domains' =>
+  array (
+{% if nextcloud_external_url is defined %}
+    '{{ nextcloud_external_url }}',
+{% endif %}
+{% if host_name is defined %}
+    '{{ host_name }}',
+{% endif %}
+{% if host_alias is defined %}
+    '{{ host_alias }}',
+{% endif %}
+{% if base_url is defined %}
+    '{{ base_url }}',
+{% endif %}
+  ),
+'datadirectory' => '{{nextcloud_data_dir}}',
+'default_language' => 'en',
+# May come later, as it needs the php systemd module, which is currently not available from repos
+#'log_type' => 'systemd',
+#Comments have been left, just in case new errors arise.
+
+#{% if ansible_distribution == "Ubuntu" and ansible_distribution_major_version == "16" %}
+#'memcache.local' => '\OC\Memcache\APCu',
+#{% else %}
+#'memcache.local' => '\OC\Memcache\APC',
+#{% endif %}
+
+'memcache.local' => '\OC\Memcache\APCu',
+
+{% if nextcloud_redirect_http_to_https %}
+'overwrite.cli.url' => 'https://{{nextcloud_external_url}}',
+{% else %}
+'overwrite.cli.url' => 'http://{{nextcloud_external_url}}',
+{% endif %}
+'htaccess.RewriteBase' => '/',
+{% if nextcloud_use_proxy is defined and nextcloud_use_proxy %}
+'proxy' => '{{ common_proxy_server }}:{{ common_proxy_port}}',
+{% endif %}
+);

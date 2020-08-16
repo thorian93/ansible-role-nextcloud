@@ -1,0 +1,11 @@
+---
+galaxy_info:
+  author: Thorian93
+  description: Ansible Role Nextcloud
+  license: "license (MIT)"
+
+dependencies:
+  - { role: ansible-role-apache2 }
+  - { role: ansible-role-php }
+  - { role: ansible-role-certbot, when: (nextcloud_create_self_signed_cert == "false") and (nextcloud_custom_cert == "false") }
+  - { role: ansible-role-mysql }

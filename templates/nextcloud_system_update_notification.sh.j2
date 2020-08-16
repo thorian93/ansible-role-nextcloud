@@ -1,0 +1,37 @@
+#!/usr/bin/env bash
+#
+# @license MIT
+# @copyright 2017 Joas Schilling coding@schilljs.com
+# @edited 2018 Robin Gierse info@thorian93.de
+
+ADMIN="{{ nextcloud_admin_name }}"
+OCC_PATH="{{ nextcloud_web_dir }}/occ"
+
+{% if ansible_pkg_mgr == "apt" %}
+PACKAGES=$(/usr/lib/update-notifier/apt-check -p 2>&1)
+{% endif %}
+{% if ansible_pkg_mgr == "yum" %}
+PACKAGES=$(/bin/yum check-update 2>&1)
+{% endif %}
+{% if ansible_pkg_mgr == "dnf" %}
+PACKAGES=$(/bin/dnf check-update 2>&1)
+{% endif %}
+
+{% if ansible_pkg_mgr == "apt" %}
+LIST_PACKAGES=$(echo "$PACKAGES" | cut --delimiter="/" --fields=1)
+{% endif %}
+{% if ansible_pkg_mgr == "yum" %}
+LIST_PACKAGES=$(echo "$PACKAGES" | cut --delimiter=" " --fields=1)
+{% endif %}
+{% if ansible_pkg_mgr == "dnf" %}
+LIST_PACKAGES=$(echo "$PACKAGES" | cut --delimiter=" " --fields=1)
+{% endif %}
+
+NUM_PACKAGES=$(echo "$PACKAGES" | wc -l)
+
+if [ "$PACKAGES" != "" ]; then
+UPDATE_MESSAGE=$(echo "Packages to update: $LIST_PACKAGES")
+sudo -u {{ apache2_http_user }} $OCC_PATH notification:generate $ADMIN "$NUM_PACKAGES packages require to be updated" -l "$UPDATE_MESSAGE"
+elif [ -f /var/run/reboot-required ]; then
+sudo -u {{ apache2_http_user }} $OCC_PATH notification:generate $ADMIN "System requires a reboot"
+fi

@@ -1,0 +1,104 @@
+#!/usr/bin/env bash
+#
+# Written by: Robin Gierse - info@thorian93.de - on 20170511
+#
+# Purpose:
+# This is a backup script for Nextcloud.
+#
+# Version: 1.0 on 20170511
+# Version: 1.1 on 20180906
+# Version: 1.2 on 20200317
+#
+# Usage:
+# ./nextcloud-backup.sh
+
+log_dir="{{ nextcloud_backup_path }}/log"
+logfile="$log_dir/nextcloud-backup.log"
+nextcloud_root="{{ nextcloud_web_dir }}"
+nextcloud_files="{{ nextcloud_data_dir }}"
+backup_dir="{{ nextcloud_backup_path }}"
+db_name="{{ nextcloud_db_name }}"
+db_backup_user="{{ mysql_backup_user }}"
+db_backup_pw="{{ mysql_backup_pw }}"
+
+today="$(date +%Y%m%d)"
+
+rsync="$(command -v rsync)"
+PHP="$(command -v php)"
+
+_initialize()
+{
+	echo "Backup started. $(date)"
+	if [ ! -d $backup_dir ]
+	then
+		mkdir -p $backup_dir
+	fi
+
+	if [ ! -d $log_dir ]
+	then
+		mkdir -p $log_dir
+	fi
+	if [ ! -f $logfile ]
+	then
+		touch $logfile
+	fi
+	# Prepare Nextcloud for the Backup:
+	echo "$(date +%H:%M:%S) : Activate Maintenance Mode:"
+	sudo -u {{ apache2_http_user }} $PHP $nextcloud_root/occ maintenance:mode --on
+	sleep 10
+	echo "$(date +%H:%M:%S) : Done Activating Maintenance Mode."
+}
+
+_backup_app()
+{
+	echo "$(date +%H:%M:%S) : Backing up $nextcloud_root..."
+	if [ ! -d "$backup_dir/nextcloud_app" ]
+	then
+		mkdir -p "$backup_dir/nextcloud_app"
+	fi
+	$rsync -Aavx --log-file=$logfile $nextcloud_root "$backup_dir/nextcloud_app"
+	if [ "$?" == "0" ]
+	then
+		echo "$(date +%H:%M:%S) : Done backing up $nextcloud_root..."
+	else
+		echo "$(date +%H:%M:%S) : An error occurred during backup."
+	fi
+}
+
+_backup_files()
+{
+	echo "$(date +%H:%M:%S) : Backing up $nextcloud_files..."
+	if [ ! -d "$backup_dir/nextcloud_files" ]
+	then
+		mkdir -p "$backup_dir/nextcloud_files"
+	fi
+	$rsync -Aavx --delete --log-file=$logfile $nextcloud_files "$backup_dir/nextcloud_files"
+	if [ "$?" == "0" ]
+	then
+		echo "$(date +%H:%M:%S) : Done backing up $nextcloud_files..."
+	else
+		echo "$(date +%H:%M:%S) : An error occurred during backup."
+	fi
+}
+
+_backup_db()
+{
+	echo "$(date +%H:%M:%S) : Backup Database."
+	mysqldump --single-transaction -h localhost -u$db_backup_user -p$db_backup_pw $db_name > $backup_dir/nextcloud-sql.bak
+	echo "$(date +%H:%M:%S) : Done backing up Database."
+}
+
+_finish()
+{
+	echo "$(date +%H:%M:%S) : Deactivate Maintenance Mode:"
+	sudo -u {{ apache2_http_user }} $PHP $nextcloud_root/occ maintenance:mode --off
+	echo "$(date +%H:%M:%S) : Done Deactivating Maintenance Mode."
+	echo "$(date +%H:%M:%S) : Backup finished."
+}
+
+# Main:
+_initialize 2>&1|tee -a $logfile
+_backup_app 2>&1|tee -a $logfile
+_backup_files 2>&1|tee -a $logfile
+_backup_db 2>&1|tee -a $logfile
+_finish 2>&1|tee -a $logfile

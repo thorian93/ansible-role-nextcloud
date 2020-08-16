@@ -1,0 +1,21 @@
+---
+apache2_http_name: httpd
+apache2_http_user: apache
+
+prerequisites:
+#  - "libapache2-mod-php"
+  - "php{{ php_version_prefix }}{{ php_repo_suffix }}-mbstring"
+  - "php{{ php_version_prefix }}{{ php_repo_suffix }}-dom"
+  - "php{{ php_version_prefix }}{{ php_repo_suffix }}-gd"
+  - "php{{ php_version_prefix }}{{ php_repo_suffix }}-json"
+  - "php{{ php_version_prefix }}{{ php_repo_suffix }}-mysqlnd"
+  - "php{{ php_version_prefix }}{{ php_repo_suffix }}-xml"
+  - "php{{ php_version_prefix }}{{ php_repo_suffix }}-zip"
+
+opt_prerequisites:
+  - "php{{ php_version_prefix }}{{ php_repo_suffix }}-apcu"
+  - "php{{ php_version_prefix }}{{ php_repo_suffix }}-curl"
+  - "php{{ php_version_prefix }}{{ php_repo_suffix }}-gmp"
+  - "php{{ php_version_prefix }}{{ php_repo_suffix }}-intl"
+  - "php{{ php_version_prefix }}{{ php_repo_suffix }}-imagick"
+  - "php{{ php_version_prefix }}{{ php_repo_suffix }}-opcache"

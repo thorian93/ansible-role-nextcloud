@@ -1,0 +1,18 @@
+---
+- name: secure permissions
+  shell: "{{ common_scripting_path }}/nextcloud_set_secure_dir_perms.sh"
+  args:
+    chdir: "{{ common_scripting_path }}"
+    executable: /bin/bash
+
+- name: nextcloud maintenance repair
+  shell: "sudo -u {{ apache2_http_user }} php {{ nextcloud_web_dir }}/occ maintenance:repair -n"
+  args:
+    executable: /bin/bash
+    chdir: "{{ nextcloud_web_dir }}"
+
+- name: nextcloud maintenance htaccess
+  shell: "sudo -u {{ apache2_http_user }} php {{ nextcloud_web_dir }}/occ maintenance:update:htaccess -n"
+  args:
+    executable: /bin/bash
+    chdir: "{{ nextcloud_web_dir }}"

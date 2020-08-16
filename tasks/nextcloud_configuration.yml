@@ -1,0 +1,170 @@
+---
+- name: "Create self-signed Certificate."
+  command: 'openssl req -new -nodes -x509 -subj "{{nextcloud_self_signed_cert_subj}}" -days 365 -keyout {{nextcloud_self_signed_certificate_key}} -out {{nextcloud_self_signed_certificate}} -extensions v3_ca'
+  args:
+    creates: "{{nextcloud_self_signed_certificate}}"
+  when: nextcloud_create_self_signed_cert
+
+- name: "Copy Nextcloud Configuration File for Apache2."
+  template:
+    src: nextcloud.conf.j2
+    dest: "{{ apache2_http_site_dir }}/nextcloud.conf"
+    owner: root
+    group: root
+    mode: 0600
+    backup: yes
+    force: yes
+  notify: "reload webserver {{ webserver_name }}"
+
+- name: "Enable Apache2 Modules."
+  apache2_module:
+    name: "{{ item }}"
+    state: present
+  with_items: "{{ apache2_modules }}"
+  notify: "restart webserver {{ webserver_name }}"
+  when: ansible_os_family == "Debian"
+
+- name: "Enable Nextcloud Configuration."
+  command: a2ensite nextcloud.conf
+  args:
+    creates: "/etc/apache2/sites-enabled/nextcloud.conf"
+  notify: "reload webserver {{ webserver_name }}"
+  when: ansible_os_family == "Debian"
+
+- name: "Copy the Nextcloud scripts."
+  template:
+    src: "{{item}}"
+    dest: "{{ common_scripting_path }}/{{item}}"
+    mode: 0750
+    owner: root
+    group: root
+  with_items:
+    - nextcloud_set_secure_dir_perms.sh
+    - nextcloud_set_update_dir_perms.sh
+
+- name: "Set Update Permissions."
+  shell: "{{ common_scripting_path }}/nextcloud_set_update_dir_perms.sh"
+  args:
+    chdir: "{{ common_scripting_path }}"
+    executable: /bin/bash
+  notify: secure permissions
+
+- name: "Upload Custom Configuration File."
+  template:
+    src: custom.config.php.j2
+    dest: "{{nextcloud_web_dir}}/config/custom.config.php"
+    owner: "{{ apache2_http_user }}"
+    group: "{{ apache2_http_user }}"
+    mode: 0600
+    backup: yes
+    force: yes
+  # notify:
+  #   - nextcloud maintenance htaccess
+
+# Apps
+
+- name: "Install Nextcloud Apps."
+  shell: "sudo -u {{ apache2_http_user }} php {{ nextcloud_web_dir }}/occ app:install {{ item }}"
+  args:
+    executable: /bin/bash
+    chdir: "{{ nextcloud_web_dir }}"
+  with_items: "{{ nextcloud_enabled_apps }}"
+  register: nextcloud_app_status
+  changed_when: "'installed' in nextcloud_app_status.stdout"
+  failed_when: "'Error' in nextcloud_app_status.stdout"
+  ignore_errors: 'yes'
+
+- name: "Enable Nextcloud Apps."
+  shell: "sudo -u {{ apache2_http_user }} php {{ nextcloud_web_dir }}/occ app:enable {{ item }}"
+  args:
+    executable: /bin/bash
+    chdir: "{{ nextcloud_web_dir }}"
+  with_items: "{{ nextcloud_enabled_apps }}"
+  ignore_errors: 'yes'
+  when: not ansible_distribution == "Debian" # Workaround, because AutoINstall does not work
+
+# Scripts
+
+- name: "Upload Backup logrotate Configuration."
+  template:
+    src: nextcloud-backup.logrotate.j2
+    dest: /etc/logrotate.d/nextcloud-backup"
+    mode: 0755
+    owner: root
+    group: root
+
+- name: "Upload Backup Script."
+  template:
+    src: nextcloud-backup.sh.j2
+    dest: "{{ common_scripting_path }}/nextcloud-backup.sh"
+    owner: root
+    group: root
+    mode: 0700
+    backup: yes
+    force: yes
+  when: nextcloud_backup
+
+- name: "Upload System Update Notification Script."
+  template:
+    src: nextcloud_system_update_notification.sh.j2
+    dest: "{{ common_scripting_path }}/nextcloud_system_update_notification.sh"
+    owner: "{{ apache2_http_user }}"
+    group: "{{ apache2_http_user }}"
+    mode: 0750
+    backup: yes
+    force: yes
+
+# Cron
+
+- name: "Configure Nextcloud Cron."
+  cron:
+    name: "Nextcloud Cronjob"
+    minute: "*/15"
+    user: "root"
+    job: "sudo -u {{ apache2_http_user }} php -f {{nextcloud_web_dir}}/cron.php"
+    state: present
+
+- name: "Configure Nextcloud Backup Script Cron."
+  cron:
+    name: "Nextcloud Backup"
+    weekday: '1'
+    hour: '1'
+    minute: '0'
+    user: "root"
+    job: "/bin/bash {{ common_scripting_path }}/nextcloud-backup.sh"
+    state: "{% if nextcloud_backup %}present{% else %}absent{% endif %}"
+
+- name: "Configure Nextcloud Update Notification Cron."
+  cron:
+    name: "Nextcloud Update Notification Cronjob"
+    minute: '0'
+    hour: '0'
+    day: '*'
+    user: "root"
+    job: "/bin/bash {{ common_scripting_path }}/nextcloud_system_update_notification.sh"
+    state: present
+
+- name: "Configure Nextcloud Preview Generation Cron."
+  cron:
+    name: "Nextcloud Preview Generation Cronjob"
+    minute: "0"
+    hour: "*/2"
+    user: "root"
+    job: "sudo -u {{ apache2_http_user }} php -f {{nextcloud_web_dir}}/occ preview:pre-generate"
+    state: present
+
+# Maintenance
+
+- name: "Nextcloud Maintenance DB Missing Indices."
+  shell: "sudo -u {{ apache2_http_user }} php {{ nextcloud_web_dir }}/occ db:add-missing-indices -n"
+  args:
+    executable: /bin/bash
+    chdir: "{{ nextcloud_web_dir }}"
+  when: not ansible_distribution == "Debian" # Workaround, because AutoINstall does not work
+
+- name: "Nextcloud Maintenance DB Convert BigInt."
+  shell: "sudo -u {{ apache2_http_user }} php {{ nextcloud_web_dir }}/occ db:convert-filecache-bigint -n"
+  args:
+    executable: /bin/bash
+    chdir: "{{ nextcloud_web_dir }}"
+  when: not ansible_distribution == "Debian" # Workaround, because AutoINstall does not work

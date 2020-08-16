@@ -1,0 +1,22 @@
+---
+apache2_http_name: apache2
+apache2_http_user: www-data
+
+# ToDo: Find a better solution for the 'bash' workaround below
+prerequisites:
+  - "libapache2-mod-php{% if php_major_version != 5 %}{{ php_version_prefix }}{% else %}5{% endif %}"
+  - "{% if php_major_version != 5 %}php{{ php_version_prefix }}-dom{% else %}bash{% endif %}"
+  - "php{% if php_major_version != 5 %}{{ php_version_prefix }}{% else %}5{% endif %}-gd"
+  - "php{% if php_major_version != 5 %}{{ php_version_prefix }}{% else %}5{% endif %}-json"
+  - "{% if php_major_version != 5 %}php{{ php_version_prefix }}-mbstring{% else %}bash{% endif %}"
+  - "php{% if php_major_version != 5 %}{{ php_version_prefix }}{% else %}5{% endif %}-mysql"
+  - "{% if php_major_version != 5 %}php{{ php_version_prefix }}-xml{% else %}bash{% endif %}"
+  - "{% if php_major_version != 5 %}php{{ php_version_prefix }}-zip{% else %}bash{% endif %}"
+
+opt_prerequisites:
+  - "php{% if php_major_version != 5 %}{{ php_version_prefix }}{% else %}5{% endif %}-apcu"
+  - "php{% if php_major_version != 5 %}{{ php_version_prefix }}{% else %}5{% endif %}-opcache"
+  - "php{% if php_major_version != 5 %}{{ php_version_prefix }}{% else %}5{% endif %}-curl"
+  - "php{% if php_major_version != 5 %}{{ php_version_prefix }}{% else %}5{% endif %}-gmp"
+  - "php{% if php_major_version != 5 %}{{ php_version_prefix }}{% else %}5{% endif %}-intl"
+  - "php{% if php_major_version != 5 %}{{ php_version_prefix }}{% else %}5{% endif %}-imagick"
