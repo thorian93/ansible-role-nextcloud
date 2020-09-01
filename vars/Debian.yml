@@ -15,6 +15,7 @@ prerequisites:
 
 opt_prerequisites:
   - "php{% if php_major_version != 5 %}{{ php_version_prefix }}{% else %}5{% endif %}-apcu"
+  - "php{% if php_major_version != 5 %}{{ php_version_prefix }}{% else %}5{% endif %}-bcmath"
   - "php{% if php_major_version != 5 %}{{ php_version_prefix }}{% else %}5{% endif %}-opcache"
   - "php{% if php_major_version != 5 %}{{ php_version_prefix }}{% else %}5{% endif %}-curl"
   - "php{% if php_major_version != 5 %}{{ php_version_prefix }}{% else %}5{% endif %}-gmp"
