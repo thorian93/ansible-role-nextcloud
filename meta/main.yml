@@ -4,6 +4,22 @@ galaxy_info:
   description: Ansible Role Nextcloud
   license: "license (MIT)"
 
+  platforms:
+    - name: Debian
+      versions:
+      - 9
+      - 10
+    - name: Ubuntu
+      versions:
+      - 18
+      - 20
+
+  galaxy_tags:
+    - linux
+    - server
+    - web
+    - nextcloud
+
 dependencies:
   - { role: ansible-role-apache2 }
   - { role: ansible-role-php }
