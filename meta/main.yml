@@ -4,15 +4,7 @@ galaxy_info:
   description: Ansible Role Nextcloud
   license: "license (MIT)"
 
-  platforms:
-    - name: Debian
-      versions:
-      - 9
-      - 10
-    - name: Ubuntu
-      versions:
-      - 18
-      - 20
+  min_ansible_version: 2.9
 
   galaxy_tags:
     - linux
@@ -20,8 +12,18 @@ galaxy_info:
     - web
     - nextcloud
 
+  platforms:
+    - name: Debian
+      versions:
+        - Stretch
+        - Buster
+    - name: Ubuntu
+      versions:
+        - Bionic
+        - Focal
+
 dependencies:
-  - { role: ansible-role-apache2 }
-  - { role: ansible-role-php }
-  - { role: ansible-role-certbot, when: (nextcloud_create_self_signed_cert == "false") and (nextcloud_custom_cert == "false") }
-  - { role: ansible-role-mysql }
+  - { role: thorian93.ansible-role-apache2 }
+  - { role: thorian93.ansible-role-php }
+  - { role: thorian93.ansible-role-certbot, when: (nextcloud_create_self_signed_cert == "false") and (nextcloud_custom_cert == "false") }
+  - { role: thorian93.ansible-role-mysql }
