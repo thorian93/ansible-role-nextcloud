@@ -13,7 +13,7 @@
   with_items: "{{ opt_prerequisites }}"
   when: nextcloud_enable_opt_prerequisites
   notify: restart webserver {{ webserver_name }}
-  ignore_errors: true
+  ignore_errors: 'yes'
 
 - name: "Copy the Nextcloud Scripts."
   template:
@@ -51,7 +51,7 @@
     owner: "{{ apache2_http_user }}"
     group: "{{ apache2_http_user }}"
     mode: 0700
-    keep_newer: true
+    keep_newer: 'yes'
     creates: /var/www/nextcloud
 
 - name: "Create Nextcloud Data Directory."

@@ -25,7 +25,7 @@
 
 - name: "Register installation status."
   set_fact:
-   nextcloud_installed: "{% if nextcloud_occ_status.stat.exists and 'installed: true' in nextcloud_installed_status.stdout %}true{% else %}false{% endif %}"
+    nextcloud_installed: "{% if nextcloud_occ_status.stat.exists and 'installed: true' in nextcloud_installed_status.stdout %}true{% else %}false{% endif %}"
 
 - name: "Include Nextcloud Installation Playbook."
   include_tasks: nextcloud_installation.yml

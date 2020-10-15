@@ -3,7 +3,7 @@ apache2_http_name: httpd
 apache2_http_user: apache
 
 prerequisites:
-#  - "libapache2-mod-php"
+  #  - "libapache2-mod-php"
   - "php{{ php_version_prefix }}{{ php_repo_suffix }}-mbstring"
   - "php{{ php_version_prefix }}{{ php_repo_suffix }}-dom"
   - "php{{ php_version_prefix }}{{ php_repo_suffix }}-gd"

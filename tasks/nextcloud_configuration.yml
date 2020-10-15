@@ -3,6 +3,8 @@
   command: 'openssl req -new -nodes -x509 -subj "{{nextcloud_self_signed_cert_subj}}" -days 365 -keyout {{nextcloud_self_signed_certificate_key}} -out {{nextcloud_self_signed_certificate}} -extensions v3_ca'
   args:
     creates: "{{nextcloud_self_signed_certificate}}"
+    executable: /bin/bash
+    warn: 'false'
   when: nextcloud_create_self_signed_cert
 
 - name: "Copy Nextcloud Configuration File for Apache2."
@@ -12,8 +14,8 @@
     owner: root
     group: root
     mode: 0600
-    backup: yes
-    force: yes
+    backup: 'yes'
+    force: 'yes'
   notify: "reload webserver {{ webserver_name }}"
 
 - name: "Enable Apache2 Modules."
@@ -47,6 +49,7 @@
   args:
     chdir: "{{ common_scripting_path }}"
     executable: /bin/bash
+    warn: 'false'
   notify: secure permissions
 
 - name: "Upload Custom Configuration File."
@@ -56,10 +59,10 @@
     owner: "{{ apache2_http_user }}"
     group: "{{ apache2_http_user }}"
     mode: 0600
-    backup: yes
-    force: yes
-  # notify:
-  #   - nextcloud maintenance htaccess
+    backup: 'yes'
+    force: 'yes'
+    # notify:
+    #   - nextcloud maintenance htaccess
 
 # Apps
 
@@ -68,6 +71,7 @@
   args:
     executable: /bin/bash
     chdir: "{{ nextcloud_web_dir }}"
+    warn: 'false'
   with_items: "{{ nextcloud_enabled_apps }}"
   register: nextcloud_app_status
   changed_when: "'installed' in nextcloud_app_status.stdout"
@@ -79,9 +83,10 @@
   args:
     executable: /bin/bash
     chdir: "{{ nextcloud_web_dir }}"
+    warn: 'false'
   with_items: "{{ nextcloud_enabled_apps }}"
   ignore_errors: 'yes'
-  when: not ansible_distribution == "Debian" # Workaround, because AutoINstall does not work
+  when: not ansible_distribution == "Debian"  # Workaround, because AutoInstall does not work
 
 # Scripts
 
@@ -100,8 +105,8 @@
     owner: root
     group: root
     mode: 0700
-    backup: yes
-    force: yes
+    backup: 'yes'
+    force: 'yes'
   when: nextcloud_backup
 
 - name: "Upload System Update Notification Script."
@@ -111,8 +116,8 @@
     owner: "{{ apache2_http_user }}"
     group: "{{ apache2_http_user }}"
     mode: 0750
-    backup: yes
-    force: yes
+    backup: 'yes'
+    force: 'yes'
 
 # Cron
 
@@ -160,11 +165,13 @@
   args:
     executable: /bin/bash
     chdir: "{{ nextcloud_web_dir }}"
-  when: not ansible_distribution == "Debian" # Workaround, because AutoINstall does not work
+    warn: 'false'
+  when: not ansible_distribution == "Debian"  # Workaround, because AutoInstall does not work
 
 - name: "Nextcloud Maintenance DB Convert BigInt."
   shell: "sudo -u {{ apache2_http_user }} php {{ nextcloud_web_dir }}/occ db:convert-filecache-bigint -n"
   args:
     executable: /bin/bash
     chdir: "{{ nextcloud_web_dir }}"
-  when: not ansible_distribution == "Debian" # Workaround, because AutoINstall does not work
+    warn: 'false'
+  when: not ansible_distribution == "Debian"  # Workaround, because AutoInstall does not work
