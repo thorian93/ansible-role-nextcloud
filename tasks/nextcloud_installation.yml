@@ -47,7 +47,7 @@
   unarchive:
     src: /tmp/nextcloud-{{nextcloud_version}}.tar.bz2
     dest: /var/www/
-    remote_src: yes
+    remote_src: 'yes'
     owner: "{{ apache2_http_user }}"
     group: "{{ apache2_http_user }}"
     mode: 0700
@@ -58,7 +58,7 @@
   file:
     path: "{{nextcloud_data_dir}}"
     state: directory
-    recurse: yes
+    recurse: 'yes'
     mode: 0744
     owner: "{{ apache2_http_user }}"
     group: "{{ apache2_http_user }}"
