@@ -2,6 +2,10 @@
 
 This role installs Nextcloud on RHEL/CentOS, Debian/Ubuntu and Fedora servers.
 
+[![Ansible Role: Nextcloud](https://img.shields.io/ansible/role/51304?style=flat-square)](https://galaxy.ansible.com/thorian93/ansible_role_nextcloud)
+[![Ansible Role: Nextcloud](https://img.shields.io/ansible/quality/51304?style=flat-square)](https://galaxy.ansible.com/thorian93/ansible_role_nextcloud)
+[![Ansible Role: Nextcloud](https://img.shields.io/ansible/role/d/51304?style=flat-square)](https://galaxy.ansible.com/thorian93/ansible_role_nextcloud)
+
 ## Known issues
 
 - Installation on Debian works generally but automatic setup of Nextcloud is currently not possible. You need to do this manually as of now.
@@ -42,37 +46,55 @@ If you want to use your own certificate you can define that here.
 
 If `nextcloud_create_self_signed_cert` and `nextcloud_custom_cert` are set to false, my `ansible-role-certbot` will be used to acquire certificates.
 
-nextcloud_db_system: "mysql"
-nextcloud_db_name: "nextcloud"
+    nextcloud_db_system: "mysql"
+    nextcloud_db_name: "nextcloud"
 
-nextcloud_enable_opt_prerequisites: true
+Configure the database for Nextcloud. Currently available is only MySQL/MariaDB.
 
-nextcloud_backup: false
-nextcloud_web_dir: "/var/www/nextcloud"
-nextcloud_data_dir: "/var/www/nextcloud/data"
-nextcloud_backup_path: "/tmp"
+  nextcloud_enable_opt_prerequisites: true
 
-nextcloud_php_options:
-  - line: "post_max_size = 4G"
-    regexp: "^post_max_size ="
-  - line: "upload_max_filesize = 4G"
-    regexp: "^upload_max_filesize ="
-  - line: "open_basedir ='{{ nextcloud_web_dir }}:{{ nextcloud_data_dir }}:/tmp:/dev/urandom'"
-    regexp: "^open_basedir ="
+This installs some optional software which is useful for Nextcloud.
 
-nextcloud_enabled_apps:
-  - files
+    nextcloud_backup: false
+    nextcloud_backup_path: "/tmp"
 
+Configure Backups for Nextcloud.
+
+    nextcloud_web_dir: "/var/www/nextcloud"
+
+Define the webroot of Nextcloud.
+
+    nextcloud_data_dir: "/var/www/nextcloud/data"
+
+Define the data directory. It is recommended to put this outside the web root.
+
+    nextcloud_php_options:
+      - line: "post_max_size = 4G"
+        regexp: "^post_max_size ="
+      - line: "upload_max_filesize = 4G"
+        regexp: "^upload_max_filesize ="
+      - line: "open_basedir ='{{ nextcloud_web_dir }}:{{ nextcloud_data_dir }}:/tmp:/dev/urandom'"
+        regexp: "^open_basedir ="
+
+Define PHP options for Nextcloud. The defaults given here are necessary for Nextcloud to work properly.
+
+    nextcloud_enabled_apps:
+      - files
+
+List the apps which should be enabled.
 
 ## Dependencies
 
-None.
+  - [thorian93.ansible-role-apache2](https://galaxy.ansible.com/thorian93/ansible_role_apache2)
+  - [thorian93.ansible-role-php](https://galaxy.ansible.com/thorian93/ansible_role_nextcloud)
+  - [thorian93.ansible-role-certbot](https://galaxy.ansible.com/thorian93/ansible_role_certbot) - when no custom or self signed certificate is used
+  - [thorian93.ansible-role-mysql](https://galaxy.ansible.com/thorian93/ansible_role_mysql)
 
 ## OS Compatibility
 
 This role ensures that it is not used against unsupported or untested operating systems by checking, if the right distribution name and major version number are present in a dedicated variable named like `<role-name>_stable_os`. You can find the variable in the role's default variable file at `defaults/main.yml`:
 
-    upgrade_stable_os:
+    role_stable_os:
       - Debian 10
       - Ubuntu 18
       - CentOS 7

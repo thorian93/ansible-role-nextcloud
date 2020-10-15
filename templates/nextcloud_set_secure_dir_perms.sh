@@ -1,5 +1,5 @@
 #!/bin/bash
-ocpath='{{nextcloud_web_dir}}'
+ocpath='{{ nextcloud_web_dir }}'
 htuser='{{ apache2_http_user }}'
 htgroup='{{ apache2_http_user }}'
 rootuser='root'

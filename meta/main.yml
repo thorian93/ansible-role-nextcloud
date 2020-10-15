@@ -23,7 +23,7 @@ galaxy_info:
         - Focal
 
 dependencies:
-  - { role: thorian93.ansible-role-apache2 }
-  - { role: thorian93.ansible-role-php }
-  - { role: thorian93.ansible-role-certbot, when: (nextcloud_create_self_signed_cert == "false") and (nextcloud_custom_cert == "false") }
-  - { role: thorian93.ansible-role-mysql }
+  - { role: thorian93.ansible_role_apache2 }
+  - { role: thorian93.ansible_role_php }
+  - { role: thorian93.ansible_role_certbot, when: (nextcloud_create_self_signed_cert == "false") and (nextcloud_custom_cert == "false") }
+  - { role: thorian93.ansible_role_mysql }

@@ -11,13 +11,13 @@
 
 - name: "Check Nextcloud Installation."
   stat:
-    path: "{{nextcloud_web_dir}}/occ"
+    path: "{{ nextcloud_web_dir }}/occ"
   register: nextcloud_occ_status
 
 - name: "Get Installation Status of Nextcloud."
   shell: "sudo -u {{ apache2_http_user }} php occ status | grep installed"
   args:
-    chdir: "{{nextcloud_web_dir}}"
+    chdir: "{{ nextcloud_web_dir }}"
   when: "nextcloud_occ_status.stat.exists"
   changed_when: false
   register: nextcloud_installed_status

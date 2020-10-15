@@ -17,8 +17,8 @@
 
 - name: "Copy the Nextcloud Scripts."
   template:
-    src: "{{item}}"
-    dest: "{{ common_scripting_path }}/{{item}}"
+    src: "{{ item }}"
+    dest: "{{ common_scripting_path }}/{{ item }}"
     mode: 0750
     owner: root
     group: root
@@ -28,24 +28,24 @@
 
 - name: "Download Nextcloud Hashes."
   get_url:
-    url: "{{item.url}}"
-    dest: /tmp/nextcloud-{{nextcloud_version}}.tar.bz2.{{item.hash}}
-  with_items: "{{nextcloud_hashes}}"
+    url: "{{ item.url }}"
+    dest: /tmp/nextcloud-{{ nextcloud_version }}.tar.bz2.{{ item.hash }}
+  with_items: "{{ nextcloud_hashes }}"
 
 - name: "Download Nextcloud Package."
   get_url:
-    url: "{{nextcloud_download_url}}"
-    dest: /tmp/nextcloud-{{nextcloud_version}}.tar.bz2
+    url: "{{ nextcloud_download_url }}"
+    dest: /tmp/nextcloud-{{ nextcloud_version }}.tar.bz2
 
 - name: "Verify Nextcloud Package."
-  command: "{{item.hash}}sum -c /tmp/nextcloud-{{nextcloud_version}}.tar.bz2.{{item.hash}}"
+  command: "{{ item.hash }}sum -c /tmp/nextcloud-{{ nextcloud_version }}.tar.bz2.{{ item.hash }}"
   args:
     chdir: /tmp/
-  with_items: "{{nextcloud_hashes}}"
+  with_items: "{{ nextcloud_hashes }}"
 
 - name: "Unpack the Nextcloud Archive."
   unarchive:
-    src: /tmp/nextcloud-{{nextcloud_version}}.tar.bz2
+    src: /tmp/nextcloud-{{ nextcloud_version }}.tar.bz2
     dest: /var/www/
     remote_src: 'yes'
     owner: "{{ apache2_http_user }}"
@@ -56,7 +56,7 @@
 
 - name: "Create Nextcloud Data Directory."
   file:
-    path: "{{nextcloud_data_dir}}"
+    path: "{{ nextcloud_data_dir }}"
     state: directory
     recurse: 'yes'
     mode: 0744
@@ -72,7 +72,7 @@
 - name: "Install Nextcloud via OCC."
   shell: sudo -u "{{ apache2_http_user }}" php "{{ nextcloud_web_dir }}"/occ maintenance:install --database "{{ nextcloud_db_system }}" --database-name "{{ nextcloud_db_name }}" --database-user "{{ mysql_root_user }}" --database-pass "{{ mysql_root_pw }}" --admin-user "{{ nextcloud_admin_name }}" --admin-pass "{{ nextcloud_admin_pw }}" --data-dir "{{ nextcloud_data_dir }}" --no-interaction
   args:
-    chdir: "{{nextcloud_web_dir}}"
+    chdir: "{{ nextcloud_web_dir }}"
     executable: /bin/bash
   notify: secure permissions
   when: not ansible_distribution == "Debian"

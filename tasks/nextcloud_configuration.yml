@@ -1,8 +1,8 @@
 ---
 - name: "Create self-signed Certificate."
-  command: 'openssl req -new -nodes -x509 -subj "{{nextcloud_self_signed_cert_subj}}" -days 365 -keyout {{nextcloud_self_signed_certificate_key}} -out {{nextcloud_self_signed_certificate}} -extensions v3_ca'
+  command: 'openssl req -new -nodes -x509 -subj "{{ nextcloud_self_signed_cert_subj }}" -days 365 -keyout {{ nextcloud_self_signed_certificate_key }} -out {{ nextcloud_self_signed_certificate }} -extensions v3_ca'
   args:
-    creates: "{{nextcloud_self_signed_certificate}}"
+    creates: "{{ nextcloud_self_signed_certificate }}"
     executable: /bin/bash
     warn: 'false'
   when: nextcloud_create_self_signed_cert
@@ -35,8 +35,8 @@
 
 - name: "Copy the Nextcloud scripts."
   template:
-    src: "{{item}}"
-    dest: "{{ common_scripting_path }}/{{item}}"
+    src: "{{ item }}"
+    dest: "{{ common_scripting_path }}/{{ item }}"
     mode: 0750
     owner: root
     group: root
@@ -55,7 +55,7 @@
 - name: "Upload Custom Configuration File."
   template:
     src: custom.config.php.j2
-    dest: "{{nextcloud_web_dir}}/config/custom.config.php"
+    dest: "{{ nextcloud_web_dir }}/config/custom.config.php"
     owner: "{{ apache2_http_user }}"
     group: "{{ apache2_http_user }}"
     mode: 0600
@@ -126,7 +126,7 @@
     name: "Nextcloud Cronjob"
     minute: "*/15"
     user: "root"
-    job: "sudo -u {{ apache2_http_user }} php -f {{nextcloud_web_dir}}/cron.php"
+    job: "sudo -u {{ apache2_http_user }} php -f {{ nextcloud_web_dir }}/cron.php"
     state: present
 
 - name: "Configure Nextcloud Backup Script Cron."
@@ -155,7 +155,7 @@
     minute: "0"
     hour: "*/2"
     user: "root"
-    job: "sudo -u {{ apache2_http_user }} php -f {{nextcloud_web_dir}}/occ preview:pre-generate"
+    job: "sudo -u {{ apache2_http_user }} php -f {{ nextcloud_web_dir }}/occ preview:pre-generate"
     state: present
 
 # Maintenance
