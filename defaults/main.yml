@@ -5,7 +5,7 @@ nextcloud_stable_os:
   - Ubuntu 18
   - Ubuntu 20
 
-nextcloud_version: "18.0.7"
+nextcloud_version: "19.0.4"
 
 nextcloud_create_self_signed_cert: true
 nextcloud_self_signed_cert_subj: "/C=DE/ST=FOO/L=BAR/O=Org/CN={{ nextcloud_external_url }}"
@@ -23,12 +23,20 @@ nextcloud_certificate_chain: "{{ certbot_cert_path }}/fullchain.pem"
 nextcloud_db_system: "mysql"
 nextcloud_db_name: "nextcloud"
 
-nextcloud_enable_opt_prerequisites: true
+nextcloud_enable_opt_prerequisites: 'true'
+
+nextcloud_turn_enable: 'false'
+nextcloud_turn_ip: " {{ ansible_default_ipv4.address }}"
+nextcloud_turn_port: 3478
+nextcloud_turn_realm: "{{ nextcloud_external_url }}"
+# Set this in your inventory. By default this role will generate a new secret on every run until this variable is set.
+# nextcloud_turn_secret:
 
 nextcloud_backup: false
 nextcloud_web_dir: "/var/www/nextcloud"
 nextcloud_data_dir: "/var/www/nextcloud/data"
 nextcloud_backup_path: "/tmp"
+nextcloud_scripts_dir: "{{ nextcloud_data_dir }}"
 
 nextcloud_php_options:
   - line: "post_max_size = 4G"

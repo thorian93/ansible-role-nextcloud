@@ -33,3 +33,7 @@
 
 - name: "Include Nextcloud Configuration Playbook."
   include_tasks: nextcloud_configuration.yml
+
+- name: "Include TURN/STUN Server Playbook."
+  include_tasks: nextcloud_turn_server.yml
+  when: nextcloud_turn_enable | bool

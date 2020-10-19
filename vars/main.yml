@@ -25,3 +25,6 @@ nextcloud_hashes:
     hash: sha256
   - url: "{{nextcloud_sha512_url}}"
     hash: sha512
+
+nextcloud_prerequisites_turn:
+  - coturn

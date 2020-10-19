@@ -1,0 +1,16 @@
+# {{ ansible_managed }}
+#
+# Coturn TURN SERVER configuration file
+#
+listening-port={{ nextcloud_turn_port }}
+listening-ip={{ nextcloud_turn_ip }}
+relay-ip={{ nextcloud_turn_ip }}
+fingerprint
+use-auth-secret
+static-auth-secret={{ nextcloud_turn_secret }}
+realm={{ nextcloud_turn_realm }}
+total-quota=0
+bps-capacity=0
+stale-nonce
+syslog
+no-multicast-peers

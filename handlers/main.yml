@@ -16,3 +16,13 @@
   args:
     executable: /bin/bash
     chdir: "{{ nextcloud_web_dir }}"
+
+- name: restart coturn
+  service:
+    name: coturn
+    state: restarted
+    enabled: 'yes'
+
+- name: print turn secret
+  debug:
+    msg: "Your TURN secret is <{{ nextcloud_turn_secret }}> - Make sure to put that in your inventory!"

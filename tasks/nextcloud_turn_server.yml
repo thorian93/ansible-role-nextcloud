@@ -1,0 +1,27 @@
+---
+- name: "Install TURN Server Prerequisites."
+  package:
+    name: "{{ nextcloud_prerequisites_turn }}"
+    state: present
+  notify: restart coturn
+
+- name: "Generate TURN Server Secret on first Run."
+  command: openssl rand -hex 32
+  register: nextcloud_turn_secret_generated
+  when: nextcloud_turn_secret is not defined
+  notify: print turn secret
+
+- name: "Store TURN Server Secret on first Run."
+  set_fact:
+    nextcloud_turn_secret: "{{ nextcloud_turn_secret_generated.stdout }}"
+  when: nextcloud_turn_secret is not defined
+
+- name: "Configure TURN Server."
+  template:
+    src: turnserver.conf.j2
+    dest: /etc/turnserver.conf
+    owner: root
+    group: root
+    mode: 0644
+    backup: 'yes'
+  notify: restart coturn

@@ -55,6 +55,15 @@ Configure the database for Nextcloud. Currently available is only MySQL/MariaDB.
 
 This installs some optional software which is useful for Nextcloud.
 
+    nextcloud_turn_enable: 'false'
+    nextcloud_turn_ip: " {{ ansible_default_ipv4.address }}"
+    nextcloud_turn_port: 3478
+    nextcloud_turn_realm: "{{ nextcloud_external_url }}"
+    # Set this in your inventory. By default this role will generate a new secret on every run until this variable is set.
+    # nextcloud_turn_secret:
+
+Enable and configure setup of a TURN server for Nextcloud Talk on your server. For further information see the [Nextcloud documentation](https://nextcloud-talk.readthedocs.io/en/latest/TURN). Keep an eye on the `nextcloud_turn_secret` variable!
+
     nextcloud_backup: false
     nextcloud_backup_path: "/tmp"
 
