@@ -36,7 +36,7 @@
 - name: "Copy the Nextcloud scripts."
   template:
     src: "{{ item }}"
-    dest: "{{ common_scripting_path }}/{{ item }}"
+    dest: "{{ nextcloud_scripts_dir }}/{{ item }}"
     mode: 0750
     owner: root
     group: root
@@ -45,9 +45,9 @@
     - nextcloud_set_update_dir_perms.sh
 
 - name: "Set Update Permissions."
-  shell: "{{ common_scripting_path }}/nextcloud_set_update_dir_perms.sh"
+  shell: "{{ nextcloud_scripts_dir }}/nextcloud_set_update_dir_perms.sh"
   args:
-    chdir: "{{ common_scripting_path }}"
+    chdir: "{{ nextcloud_scripts_dir }}"
     executable: /bin/bash
     warn: 'false'
   notify: secure permissions
@@ -101,7 +101,7 @@
 - name: "Upload Backup Script."
   template:
     src: nextcloud-backup.sh.j2
-    dest: "{{ common_scripting_path }}/nextcloud-backup.sh"
+    dest: "{{ nextcloud_scripts_dir }}/nextcloud-backup.sh"
     owner: root
     group: root
     mode: 0700
@@ -112,7 +112,7 @@
 - name: "Upload System Update Notification Script."
   template:
     src: nextcloud_system_update_notification.sh.j2
-    dest: "{{ common_scripting_path }}/nextcloud_system_update_notification.sh"
+    dest: "{{ nextcloud_scripts_dir }}/nextcloud_system_update_notification.sh"
     owner: "{{ apache2_http_user }}"
     group: "{{ apache2_http_user }}"
     mode: 0750
@@ -136,7 +136,7 @@
     hour: '1'
     minute: '0'
     user: "root"
-    job: "/bin/bash {{ common_scripting_path }}/nextcloud-backup.sh"
+    job: "/bin/bash {{ nextcloud_scripts_dir }}/nextcloud-backup.sh"
     state: "{% if nextcloud_backup %}present{% else %}absent{% endif %}"
 
 - name: "Configure Nextcloud Update Notification Cron."
@@ -146,7 +146,7 @@
     hour: '0'
     day: '*'
     user: "root"
-    job: "/bin/bash {{ common_scripting_path }}/nextcloud_system_update_notification.sh"
+    job: "/bin/bash {{ nextcloud_scripts_dir }}/nextcloud_system_update_notification.sh"
     state: present
 
 - name: "Configure Nextcloud Preview Generation Cron."

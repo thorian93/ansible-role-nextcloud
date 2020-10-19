@@ -2,7 +2,7 @@
 apache2_http_name: httpd
 apache2_http_user: apache
 
-prerequisites:
+nextcloud_prerequisites:
   #  - "libapache2-mod-php"
   - "php{{ php_version_prefix }}{{ php_repo_suffix }}-mbstring"
   - "php{{ php_version_prefix }}{{ php_repo_suffix }}-dom"
@@ -12,7 +12,7 @@ prerequisites:
   - "php{{ php_version_prefix }}{{ php_repo_suffix }}-xml"
   - "php{{ php_version_prefix }}{{ php_repo_suffix }}-zip"
 
-opt_prerequisites:
+nextcloud_prerequisites_opt:
   - "php{{ php_version_prefix }}{{ php_repo_suffix }}-apcu"
   - "php{{ php_version_prefix }}{{ php_repo_suffix }}-bcmath"
   - "php{{ php_version_prefix }}{{ php_repo_suffix }}-curl"
