@@ -62,7 +62,7 @@ github-deploy-tags:
     - shell
   script:
     - git remote set-url --push origin ${GITHUB_REPO}
-    - git push origin HEAD:${CI_COMMIT_TAG}
+    - git push origin ${CI_COMMIT_TAG}
   only:
     - tags
   except:
