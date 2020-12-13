@@ -44,14 +44,14 @@ If you want to use your own certificate you can define that here.
     nextcloud_certificate: "{{ certbot_cert_path }}/cert.pem"
     nextcloud_certificate_chain: "{{ certbot_cert_path }}/fullchain.pem"
 
-If `nextcloud_create_self_signed_cert` and `nextcloud_custom_cert` are set to false, my `ansible-role-certbot` will be used to acquire certificates.
+If `nextcloud_create_self_signed_cert` and `nextcloud_custom_cert` are set to false, my [ansible_role_certbot](https://galaxy.ansible.com/thorian93/ansible_role_certbot) will be used to acquire certificates.
 
     nextcloud_db_system: "mysql"
     nextcloud_db_name: "nextcloud"
 
 Configure the database for Nextcloud. Currently available is only MySQL/MariaDB.
 
-  nextcloud_enable_opt_prerequisites: true
+    nextcloud_enable_opt_prerequisites: true
 
 This installs some optional software which is useful for Nextcloud.
 
