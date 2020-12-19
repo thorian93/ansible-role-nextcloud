@@ -9,6 +9,11 @@
 - name: "Include OS Family specific Variables."
   include_vars: "{{ ansible_os_family }}.yml"
 
+- name: "Run Certbot Role conditionally."
+  include_role:
+    name: thorian93.ansible_role_certbot
+  when: (not nextcloud_create_self_signed_cert | bool) or (not nextcloud_custom_cert | bool)
+
 - name: "Check Nextcloud Installation."
   stat:
     path: "{{ nextcloud_web_dir }}/occ"
