@@ -14,10 +14,18 @@
   notify: restart webserver {{ webserver_name }}
   ignore_errors: 'yes'
 
+- name: "Create Nextcloud Scripts Directory."
+  file:
+    path: "{{ nextcloud_scripts_dir }}"
+    state: directory
+    mode: 0750
+    owner: root
+    group: root
+
 - name: "Copy the Nextcloud Scripts."
   template:
     src: "{{ item }}"
-    dest: "{{ common_scripting_path }}/{{ item }}"
+    dest: "{{ nextcloud_scripts_dir }}/{{ item }}"
     mode: 0750
     owner: root
     group: root
@@ -63,9 +71,9 @@
     group: "{{ apache2_http_user }}"
 
 - name: "Update Permissions."
-  shell: "bash {{ common_scripting_path }}/nextcloud_set_update_dir_perms.sh"
+  shell: "bash {{ nextcloud_scripts_dir }}/nextcloud_set_update_dir_perms.sh"
   args:
-    chdir: "{{ common_scripting_path }}"
+    chdir: "{{ nextcloud_scripts_dir }}"
     executable: /bin/bash
 
 - name: "Install Nextcloud via OCC."
@@ -74,4 +82,4 @@
     chdir: "{{ nextcloud_web_dir }}"
     executable: /bin/bash
   notify: secure permissions
-  when: not ansible_distribution == "Debian"
+  when: not (ansible_distribution == "Debian" and ansible_distribution_major_version == "9")

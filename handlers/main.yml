@@ -1,8 +1,8 @@
 ---
 - name: secure permissions
-  shell: "{{ common_scripting_path }}/nextcloud_set_secure_dir_perms.sh"
+  shell: "{{ nextcloud_scripts_dir }}/nextcloud_set_secure_dir_perms.sh"
   args:
-    chdir: "{{ common_scripting_path }}"
+    chdir: "{{ nextcloud_scripts_dir }}"
     executable: /bin/bash
 
 - name: nextcloud maintenance repair

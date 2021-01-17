@@ -12,7 +12,7 @@
 - name: "Run Certbot Role conditionally."
   include_role:
     name: thorian93.ansible_role_certbot
-  when: (not nextcloud_create_self_signed_cert | bool) or (not nextcloud_custom_cert | bool)
+  when: (not nextcloud_create_self_signed_cert | bool) or (nextcloud_custom_cert | bool)
 
 - name: "Check Nextcloud Installation."
   stat:
@@ -24,9 +24,9 @@
   args:
     chdir: "{{ nextcloud_web_dir }}"
   when: "nextcloud_occ_status.stat.exists"
-  changed_when: false
+  changed_when: 'false'
   register: nextcloud_installed_status
-  ignore_errors: true
+  ignore_errors: 'true'
 
 - name: "Register installation status."
   set_fact:
