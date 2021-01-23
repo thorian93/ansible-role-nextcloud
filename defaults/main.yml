@@ -27,6 +27,7 @@ nextcloud_certificate: "{{ certbot_cert_path }}/cert.pem"
 nextcloud_certificate_chain: "{{ certbot_cert_path }}/fullchain.pem"
 
 nextcloud_db_system: "mysql"
+nextcloud_db_host: "127.0.0.1"
 nextcloud_db_name: "nextcloud"
 
 nextcloud_enable_opt_prerequisites: 'true'

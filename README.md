@@ -23,7 +23,7 @@ No special requirements; note that this role requires root access, so either run
 
 Available variables are listed below, along with default values (see `defaults/main.yml`):
 
-    nextcloud_version: "18.0.7"
+    nextcloud_version: "20.0.5"
 
 Define the Nextcloud version you want to install.
 
@@ -47,6 +47,7 @@ If you want to use your own certificate you can define that here.
 If `nextcloud_create_self_signed_cert` and `nextcloud_custom_cert` are set to false, my [ansible_role_certbot](https://galaxy.ansible.com/thorian93/ansible_role_certbot) will be used to acquire certificates.
 
     nextcloud_db_system: "mysql"
+    nextcloud_db_host: "127.0.0.1"
     nextcloud_db_name: "nextcloud"
 
 Configure the database for Nextcloud. Currently available is only MySQL/MariaDB.

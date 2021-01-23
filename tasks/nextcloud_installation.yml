@@ -14,25 +14,6 @@
   notify: restart webserver {{ webserver_name }}
   ignore_errors: 'yes'
 
-- name: "Create Nextcloud Scripts Directory."
-  file:
-    path: "{{ nextcloud_scripts_dir }}"
-    state: directory
-    mode: 0750
-    owner: root
-    group: root
-
-- name: "Copy the Nextcloud Scripts."
-  template:
-    src: "{{ item }}"
-    dest: "{{ nextcloud_scripts_dir }}/{{ item }}"
-    mode: 0750
-    owner: root
-    group: root
-  with_items:
-    - nextcloud_set_secure_dir_perms.sh
-    - nextcloud_set_update_dir_perms.sh
-
 - name: "Download Nextcloud Hashes."
   get_url:
     url: "{{ item.url }}"
@@ -70,6 +51,25 @@
     owner: "{{ apache2_http_user }}"
     group: "{{ apache2_http_user }}"
 
+- name: "Create Nextcloud Scripts Directory."
+  file:
+    path: "{{ nextcloud_scripts_dir }}"
+    state: directory
+    mode: 0750
+    owner: root
+    group: root
+
+- name: "Copy the Nextcloud Scripts."
+  template:
+    src: "{{ item }}"
+    dest: "{{ nextcloud_scripts_dir }}/{{ item }}"
+    mode: 0750
+    owner: root
+    group: root
+  with_items:
+    - nextcloud_set_secure_dir_perms.sh
+    - nextcloud_set_update_dir_perms.sh
+
 - name: "Update Permissions."
   shell: "bash {{ nextcloud_scripts_dir }}/nextcloud_set_update_dir_perms.sh"
   args:
@@ -77,7 +77,7 @@
     executable: /bin/bash
 
 - name: "Install Nextcloud via OCC."
-  shell: sudo -u "{{ apache2_http_user }}" php "{{ nextcloud_web_dir }}"/occ maintenance:install --database "{{ nextcloud_db_system }}" --database-name "{{ nextcloud_db_name }}" --database-user "{{ mysql_root_user }}" --database-pass "{{ mysql_root_pw }}" --admin-user "{{ nextcloud_admin_name }}" --admin-pass "{{ nextcloud_admin_pw }}" --data-dir "{{ nextcloud_data_dir }}" --no-interaction
+  shell: sudo -u "{{ apache2_http_user }}" php "{{ nextcloud_web_dir }}"/occ maintenance:install --database "{{ nextcloud_db_system }}" --database-host "{{ nextcloud_db_host }}" --database-name "{{ nextcloud_db_name }}" --database-user "{{ mysql_root_user }}" --database-pass "{{ mysql_root_pw }}" --admin-user "{{ nextcloud_admin_name }}" --admin-pass "{{ nextcloud_admin_pw }}" --data-dir "{{ nextcloud_data_dir }}" --no-interaction
   args:
     chdir: "{{ nextcloud_web_dir }}"
     executable: /bin/bash
