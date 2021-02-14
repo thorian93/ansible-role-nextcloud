@@ -1,36 +1,38 @@
 #!/bin/bash
-ocpath='{{ nextcloud_web_dir }}'
+ncpath='{{ nextcloud_web_dir }}'
+ncdatapath='{{ nextcloud_data_dir }}'
 htuser='{{ apache2_http_user }}'
 htgroup='{{ apache2_http_user }}'
 rootuser='root'
 
 
 printf "Creating possible missing Directories\n"
-mkdir -p $ocpath/data
-mkdir -p $ocpath/updater
+mkdir -p $ncpath/data
+mkdir -p $ncpath/updater
 
 printf "chmod Files and Directories\n"
-find ${ocpath}/ -type f -print0 | xargs -0 chmod 0640
-find ${ocpath}/ -type d -print0 | xargs -0 chmod 0750
+find ${ncpath}/ -type f -print0 | xargs -0 chmod 0640
+find ${ncpath}/ -type d -print0 | xargs -0 chmod 0750
 
 printf "chown Directories\n"
-chown -R ${rootuser}:${htgroup} ${ocpath}/
-chown -R ${htuser}:${htgroup} ${ocpath}/apps/
-chown -R ${htuser}:${htgroup} ${ocpath}/config/
-chown -R ${htuser}:${htgroup} ${ocpath}/data/
-chown -R ${htuser}:${htgroup} ${ocpath}/themes/
-chown -R ${htuser}:${htgroup} ${ocpath}/updater/
+chown -R ${rootuser}:${htgroup} ${ncpath}/
+chown -R ${htuser}:${htgroup} ${ncpath}/apps/
+chown -R ${htuser}:${htgroup} ${ncpath}/config/
+chown -R ${htuser}:${htgroup} ${ncpath}/data/
+chown -R ${htuser}:${htgroup} ${ncdatapath}/
+chown -R ${htuser}:${htgroup} ${ncpath}/themes/
+chown -R ${htuser}:${htgroup} ${ncpath}/updater/
 
-chmod +x ${ocpath}/occ
+chmod +x ${ncpath}/occ
 
 printf "chmod/chown .htaccess\n"
-if [ -f ${ocpath}/.htaccess ]
+if [ -f ${ncpath}/.htaccess ]
  then
-  chmod 0644 ${ocpath}/.htaccess
-  chown ${rootuser}:${htgroup} ${ocpath}/.htaccess
+  chmod 0644 ${ncpath}/.htaccess
+  chown ${rootuser}:${htgroup} ${ncpath}/.htaccess
 fi
-if [ -f ${ocpath}/data/.htaccess ]
+if [ -f ${ncpath}/data/.htaccess ]
  then
-  chmod 0644 ${ocpath}/data/.htaccess
-  chown ${rootuser}:${htgroup} ${ocpath}/data/.htaccess
+  chmod 0644 ${ncpath}/data/.htaccess
+  chown ${rootuser}:${htgroup} ${ncpath}/data/.htaccess
 fi
