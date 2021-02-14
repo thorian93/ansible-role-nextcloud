@@ -5,7 +5,7 @@ nextcloud_stable_os:
   - Ubuntu 18
   - Ubuntu 20
 
-nextcloud_version: "20.0.5"
+nextcloud_version: "20.0.7"
 
 nextcloud_external_url: "{{ inventory_hostname }}"
 
@@ -43,7 +43,7 @@ nextcloud_backup: 'false'
 nextcloud_web_dir: "/var/www/nextcloud"
 nextcloud_data_dir: "/var/www/nextcloud/data"
 nextcloud_backup_path: "/tmp"
-nextcloud_scripts_dir: "{{ nextcloud_data_dir }}"
+nextcloud_scripts_dir: "{{ nextcloud_data_dir }}/scripts"
 
 nextcloud_php_options:
   - line: "post_max_size = 4G"
