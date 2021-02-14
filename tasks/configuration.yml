@@ -6,6 +6,16 @@
     warn: 'false'
   when: nextcloud_create_self_signed_cert
 
+- name: Configure Apache PHP ini file for Nextcloud.
+  lineinfile:
+    dest: "/etc/php/{{ php_major_version }}.{{ php_minor_version }}/apache2/conf.d/90-nextcloud.ini"
+    regexp: "{{ item.regexp }}"
+    line: "{{ item.line }}"
+    create: 'true'
+    backup: 'false'
+  with_items: "{{ nextcloud_php_options }}"
+  when: php_install_status_apache.stat.exists
+
 - name: "Copy Nextcloud Configuration File for Apache2."
   template:
     src: nextcloud.conf.j2

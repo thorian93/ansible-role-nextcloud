@@ -38,18 +38,25 @@
     remote_src: 'yes'
     owner: "{{ apache2_http_user }}"
     group: "{{ apache2_http_user }}"
-    mode: 0700
+    mode: 0750
     keep_newer: 'yes'
     creates: /var/www/nextcloud
+
+- name: "Move the Nextcloud Installation into Place."
+  command: mv /var/www/nextcloud "{{ nextcloud_web_dir }}"
+  args:
+    creates: "{{ nextcloud_web_dir }}"
+    warn: 'false'
+  when: nextcloud_web_dir != "/var/www/nextcloud"
 
 - name: "Create Nextcloud Data Directory."
   file:
     path: "{{ nextcloud_data_dir }}"
     state: directory
-    recurse: 'yes'
-    mode: 0744
     owner: "{{ apache2_http_user }}"
     group: "{{ apache2_http_user }}"
+    mode: 0750
+    recurse: 'yes'
 
 - name: "Create Nextcloud Scripts Directory."
   file:
