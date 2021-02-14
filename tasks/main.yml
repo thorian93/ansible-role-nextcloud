@@ -33,12 +33,12 @@
     nextcloud_installed: "{% if nextcloud_occ_status.stat.exists and 'installed: true' in nextcloud_installed_status.stdout %}true{% else %}false{% endif %}"
 
 - name: "Include Nextcloud Installation Playbook."
-  include_tasks: nextcloud_installation.yml
+  include_tasks: installation.yml
   when: not nextcloud_installed
 
 - name: "Include Nextcloud Configuration Playbook."
-  include_tasks: nextcloud_configuration.yml
+  include_tasks: configuration.yml
 
 - name: "Include TURN/STUN Server Playbook."
-  include_tasks: nextcloud_turn_server.yml
+  include_tasks: turn_server.yml
   when: nextcloud_turn_enable | bool

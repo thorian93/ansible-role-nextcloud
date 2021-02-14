@@ -71,12 +71,11 @@ Enable and configure setup of a TURN server for Nextcloud Talk on your server. F
 Configure Backups for Nextcloud.
 
     nextcloud_web_dir: "/var/www/nextcloud"
-
-Define the webroot of Nextcloud.
-
     nextcloud_data_dir: "/var/www/nextcloud/data"
 
-Define the data directory. It is recommended to put this outside the web root.
+Define directories for Nextcloud.  
+**It is recommended to put the data directory outside of the web root.**  
+*The web root is configurable but currently only supports residing in `/var/www`. Putting the application outside of `/var/www` won't work currently! This does however not affect the data directory.*
 
     nextcloud_php_options:
       - line: "post_max_size = 4G"
