@@ -1,7 +1,8 @@
 ---
 galaxy_info:
-  author: Thorian93
-  description: Ansible Role Nextcloud
+  role_name: nextcloud
+  author: thorian93
+  description: Nextcloud - Open Source Files and Collaboration
   license: "license (MIT)"
 
   min_ansible_version: 2.9
@@ -11,6 +12,9 @@ galaxy_info:
     - server
     - web
     - nextcloud
+    - cloud
+    - collaboration
+    - files
 
   platforms:
     - name: Debian
@@ -23,9 +27,9 @@ galaxy_info:
         - Focal
 
 dependencies:
-  - name: thorian93.ansible_role_apache2
+  - name: thorian93.apache2
     version: master
-  - name: thorian93.ansible_role_php
+  - name: thorian93.php
     version: master
-  - name: thorian93.ansible_role_mysql
-    version: master
+  - name: geerlingguy.mysql
+    version: 3.2.0
