@@ -2,9 +2,9 @@
 
 This role installs Nextcloud on RHEL/CentOS, Debian/Ubuntu and Fedora servers.
 
-[![Ansible Role: Nextcloud](https://img.shields.io/ansible/role/51304?style=flat-square)](https://galaxy.ansible.com/thorian93/ansible_role_nextcloud)
-[![Ansible Role: Nextcloud](https://img.shields.io/ansible/quality/51304?style=flat-square)](https://galaxy.ansible.com/thorian93/ansible_role_nextcloud)
-[![Ansible Role: Nextcloud](https://img.shields.io/ansible/role/d/51304?style=flat-square)](https://galaxy.ansible.com/thorian93/ansible_role_nextcloud)
+[![Ansible Role: Nextcloud](https://img.shields.io/ansible/role/55140?style=flat-square)](https://galaxy.ansible.com/thorian93/nextcloud)
+[![Ansible Role: Nextcloud](https://img.shields.io/ansible/quality/55140?style=flat-square)](https://galaxy.ansible.com/thorian93/nextcloud)
+[![Ansible Role: Nextcloud](https://img.shields.io/ansible/role/d/55140?style=flat-square)](https://galaxy.ansible.com/thorian93/nextcloud)
 
 ## Known issues
 
@@ -44,7 +44,7 @@ If you want to use your own certificate you can define that here.
     nextcloud_certificate: "{{ certbot_cert_path }}/cert.pem"
     nextcloud_certificate_chain: "{{ certbot_cert_path }}/fullchain.pem"
 
-If `nextcloud_create_self_signed_cert` and `nextcloud_custom_cert` are set to false, my [ansible_role_certbot](https://galaxy.ansible.com/thorian93/ansible_role_certbot) will be used to acquire certificates.
+If `nextcloud_create_self_signed_cert` and `nextcloud_custom_cert` are set to false, my [ansible_role_certbot](https://galaxy.ansible.com/thorian93/certbot) will be used to acquire certificates.
 
     nextcloud_db_system: "mysql"
     nextcloud_db_host: "127.0.0.1"
@@ -94,10 +94,10 @@ List the apps which should be enabled.
 
 ## Dependencies
 
-  - [thorian93.ansible-role-apache2](https://galaxy.ansible.com/thorian93/ansible_role_apache2)
-  - [thorian93.ansible-role-php](https://galaxy.ansible.com/thorian93/ansible_role_nextcloud)
-  - [thorian93.ansible-role-certbot](https://galaxy.ansible.com/thorian93/ansible_role_certbot) - when no custom or self signed certificate is used
-  - [thorian93.ansible-role-mysql](https://galaxy.ansible.com/thorian93/ansible_role_mysql)
+  - [thorian93.apache2](https://galaxy.ansible.com/thorian93/apache2)
+  - [thorian93.php](https://galaxy.ansible.com/thorian93/nextcloud)
+  - [thorian93.certbot](https://galaxy.ansible.com/thorian93/certbot) - when no custom or self signed certificate is used
+  - [thorian93.mysql](https://galaxy.ansible.com/thorian93/mysql)
 
 ## OS Compatibility
 
