@@ -1,6 +1,6 @@
 # Ansible Role: Nextcloud
 
-This role installs Nextcloud on RHEL/CentOS, Debian/Ubuntu and Fedora servers.
+This role installs Nextcloud on Debian/Ubuntu, RHEL/CentOS and Fedora servers.
 
 [![Ansible Role: Nextcloud](https://img.shields.io/ansible/role/55140?style=flat-square)](https://galaxy.ansible.com/thorian93/nextcloud)
 [![Ansible Role: Nextcloud](https://img.shields.io/ansible/quality/55140?style=flat-square)](https://galaxy.ansible.com/thorian93/nextcloud)
@@ -16,7 +16,7 @@ No special requirements; note that this role requires root access, so either run
 
     - hosts: foobar
       roles:
-        - role: ansible-role-nextcloud
+        - role: thorian93.nextcloud
           become: yes
 
 ## Role Variables
