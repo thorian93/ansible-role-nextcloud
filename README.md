@@ -1,5 +1,7 @@
 # Ansible Role: Nextcloud
 
+<img src="https://img.shields.io/badge/-Nextcloud-%230082C9?style=for-the-badge&logo=Nextcloud" alt="Nextcloud">
+
 This role installs Nextcloud on Debian/Ubuntu, RHEL/CentOS and Fedora servers.
 
 [![Ansible Role: Nextcloud](https://img.shields.io/ansible/role/55140?style=flat-square)](https://galaxy.ansible.com/thorian93/nextcloud)
@@ -44,7 +46,7 @@ If you want to use your own certificate you can define that here.
     nextcloud_certificate: "{{ certbot_cert_path }}/cert.pem"
     nextcloud_certificate_chain: "{{ certbot_cert_path }}/fullchain.pem"
 
-If `nextcloud_create_self_signed_cert` and `nextcloud_custom_cert` are set to false, my [ansible_role_certbot](https://galaxy.ansible.com/thorian93/certbot) will be used to acquire certificates.
+If `nextcloud_create_self_signed_cert` and `nextcloud_custom_cert` are set to false, [thorian93.certbot](https://galaxy.ansible.com/thorian93/certbot) will be used to acquire certificates.
 
     nextcloud_db_system: "mysql"
     nextcloud_db_host: "127.0.0.1"
