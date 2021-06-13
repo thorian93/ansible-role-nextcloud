@@ -5,11 +5,13 @@ nextcloud_stable_os:
   - Ubuntu 18
   - Ubuntu 20
 
-nextcloud_version: "20.0.7"
+nextcloud_version: "21.0.1"
 
 nextcloud_external_url: "{{ inventory_hostname }}"
+nextcloud_default_phone_region: 'DE'
 
 nextcloud_admin_name: admin
+nextcloud_admin_pw: admin
 
 nextcloud_redirect_http_to_https: 'true'
 
@@ -52,5 +54,9 @@ nextcloud_php_options:
     regexp: "^upload_max_filesize ="
   - line: "open_basedir ='{{ nextcloud_web_dir }}:{{ nextcloud_data_dir }}:/tmp:/dev/urandom'"
     regexp: "^open_basedir ="
+  - line: "apc.enable_cli=1"
+    regexp: "^apc.enable_cli="
+  - line: "memory_limit = 512M"
+    regexp: "^memory_limit ="
 
 nextcloud_enabled_apps: []

@@ -8,13 +8,14 @@
 
 - name: Configure Apache PHP ini file for Nextcloud.
   lineinfile:
-    dest: "/etc/php/{{ php_major_version }}.{{ php_minor_version }}/apache2/conf.d/90-nextcloud.ini"
+    dest: "/etc/php/{{ php_major_version }}.{{ php_minor_version }}/{{ webserver_apache_name }}/conf.d/10-nextcloud.ini"
     regexp: "{{ item.regexp }}"
     line: "{{ item.line }}"
     create: 'true'
     backup: 'false'
   with_items: "{{ nextcloud_php_options }}"
   when: php_install_status_apache.stat.exists
+  notify: "restart webserver {{ webserver_name }}"
 
 - name: "Copy Nextcloud Configuration File for Apache2."
   template:

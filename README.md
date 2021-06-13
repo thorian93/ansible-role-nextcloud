@@ -10,7 +10,7 @@ This role installs Nextcloud on Debian/Ubuntu, RHEL/CentOS and Fedora servers.
 
 ## Known issues
 
-- Installation on Debian works generally but automatic setup of Nextcloud is currently not possible. You need to do this manually as of now.
+- Installation on Debian works generally but automatic setup of Nextcloud is currently not possible. You need to do this manually as of now and run the role again afterwards for post installation management tasks. The role will fail on first run, this is expected.
 
 ## Requirements
 
